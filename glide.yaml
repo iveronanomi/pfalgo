@@ -1,0 +1,4 @@
+package: .
+import: []
+testImport:
+- package: gopkg.in/check.v1

@@ -30,16 +30,16 @@ func (g *SquareGrid) AddObstructions(nodes ...Node) {
 	for _, n := range nodes {
 		if g.InBound(n) {
 			g.obstructions[n] = struct{}{}
-			log.Printf("Add node: %v", n)
+			// log.Printf("Add node: %v", n)
 			continue
 		}
-		log.Printf("NOTICE: not in bound: %v", n)
+		// log.Printf("NOTICE: not in bound: %v", n)
 	}
 }
 
 // AddWall add wall according on Heigt, Width
 func (g *SquareGrid) AddWall(start Node, height, width int) {
-	log.Printf("Draw a wall from %v width: %v, height: %v", start, height, width)
+	// log.Printf("Draw a wall from %v width: %v, height: %v", start, height, width)
 	for x := int(start[0]); x < width+int(start[0]); x++ {
 		for y := int(start[1]); y < height+int(start[1]); y++ {
 			g.AddObstructions(Node{uint32(x), uint32(y)})
@@ -49,7 +49,7 @@ func (g *SquareGrid) AddWall(start Node, height, width int) {
 
 // InBound is it node locatated in the grid
 func (g *SquareGrid) InBound(node Node) bool {
-	log.Printf("%v |  0 <= %d < %d  && | 0 <= %d < %d", node, node[0], g.width, node[1], g.height)
+	// log.Printf("%v |  0 <= %d < %d  && | 0 <= %d < %d", node, node[0], g.width, node[1], g.height)
 	return (0 <= node[0] && node[0] < g.width) &&
 		(0 <= node[1] && node[1] < g.height)
 }
@@ -92,15 +92,14 @@ func NewSquareGrid(width, height uint32, obstructions map[Node]struct{}) *Square
 // String create preview of grid
 func (g *SquareGrid) String() string {
 	out := ""
-	for x := 0; x < int(g.height); x++ {
-		for y := 0; y < int(g.width); y++ {
+	for y := 0; y < int(g.height); y++ {
+		for x := 0; x < int(g.width); x++ {
 			if !g.Passable(Node{uint32(x), uint32(y)}) {
 				out += charObstruction
 				continue
 			}
 			out += charGrid
 		}
-		log.Println(x)
 		out += "\n\r"
 	}
 	return out

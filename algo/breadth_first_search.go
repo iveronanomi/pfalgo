@@ -34,10 +34,10 @@ func BreadthFirstSearch2(g *SquareGrid, start Node) map[Node]bool {
 
 	for !frontier.Empty() {
 		current := frontier.Get()
-		log.Printf("Came From: %v", current)
+		// log.Printf("Came From: %v", current)
 		for _, next := range g.Neighbours(current) {
 			if v, ok := cameFrom[next]; !ok || !v {
-				log.Printf("%v : %#v", current, frontier.nodes)
+				// log.Printf("%v : %#v", current, frontier.nodes)
 				frontier.Put(next)
 				cameFrom[next] = true
 			}

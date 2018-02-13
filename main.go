@@ -1,20 +1,25 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/iveronanomi/pfalgo/algo"
 )
 
 func main() {
-	g := algo.SimpleGraph{
-		Nodes: map[string][]string{
-			"A": {"B"},
-			"B": {"A", "C", "D"},
-			"C": {"A"},
-			"D": {"A", "E"},
-			"E": {"B", "F"},
-			"F": {"A"},
+	walls := map[uint32]map[uint32]struct{}{
+		2: {
+			2: struct{}{},
+			3: struct{}{},
+			4: struct{}{},
+			5: struct{}{},
+			6: struct{}{},
+			7: struct{}{},
 		},
 	}
 
-	algo.BreadthFirstSearch(g, "A")
+	sg := algo.NewSquareGrid(15, 5, walls)
+	fmt.Println(sg.String())
+
+	algo.BreadthFirstSearch2(sg, algo.Node{3, 5})
 }

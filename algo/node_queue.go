@@ -5,6 +5,18 @@ type Queue struct {
 	nodes []Node
 }
 
+// IQueue interface describes walking by nodes queue
+type IQueue interface {
+	PopLeft() INode
+	Empty() bool
+	Put(n INode)
+	Get() INode
+}
+
+// INode interface described node functionality
+type INode interface {
+}
+
 // NewQueue create new Queue
 func NewQueue() *Queue {
 	return &Queue{

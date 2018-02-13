@@ -7,19 +7,17 @@ import (
 )
 
 func main() {
-	walls := map[uint32]map[uint32]struct{}{
-		2: {
-			2: struct{}{},
-			3: struct{}{},
-			4: struct{}{},
-			5: struct{}{},
-			6: struct{}{},
-			7: struct{}{},
-		},
-	}
+	//Create Grid
+	sg := algo.NewSquareGrid(30, 15, nil)
+	//Add walls to grid
+	sg.AddWall(algo.Node{3, 3}, 2, 9)
+	sg.AddWall(algo.Node{13, 4}, 2, 11)
+	sg.AddWall(algo.Node{21, 0}, 2, 7)
+	sg.AddWall(algo.Node{21, 5}, 5, 2)
 
-	sg := algo.NewSquareGrid(15, 5, walls)
 	fmt.Println(sg.String())
 
-	algo.BreadthFirstSearch2(sg, algo.Node{3, 5})
+	cf := algo.BreadthFirstSearch2(sg, algo.Node{8, 7})
+
+	fmt.Printf("\nCameFrom:\n%v\n", cf)
 }

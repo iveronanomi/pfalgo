@@ -16,8 +16,14 @@ func main() {
 	sg.AddWall(algo.Node{21, 0}, 7, 2)
 	sg.AddWall(algo.Node{21, 5}, 2, 5)
 
-	cf := algo.BreadthFirstSearch3(sg, algo.Node{8, 7}, algo.Node{24, 0})
+	sg.Start(algo.Node{24, 12}) //only fot a draw
+	sg.Target(algo.Node{24, 0}) //only for a draw
+
+	algo.BreadthFirstSearch3(sg, algo.Node{24, 12}, algo.Node{24, 0})
 
 	fmt.Println(sg.String())
-	fmt.Printf("\nCameFrom:\n%v\n", cf)
+
+	// algo.DijkstraSearch(sg, algo.Node{24, 12}, algo.Node{24, 0})
+
+	// fmt.Println(sg.String())
 }

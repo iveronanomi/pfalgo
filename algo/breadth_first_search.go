@@ -14,10 +14,10 @@ func BreadthFirstSearch1(g SimpleGraph, start string) {
 
 	for !f.Empty() {
 		current := f.Get()
-		log.Printf("Visited: %s", current)
+		// log.Printf("Visited: %s", current)
 		for _, next := range g.Neiborhood(current) {
 			if v, ok := visited[next]; !ok || !v {
-				log.Printf("%v : %#v", current, f.nodes)
+				// log.Printf("%v : %#v", current, f.nodes)
 				f.Put(next)
 				visited[next] = true
 			}
@@ -35,10 +35,10 @@ func BreadthFirstSearch2(g *SquareGrid, start Node) map[Node]bool {
 	for !frontier.Empty() {
 		current := frontier.Get()
 		g.Visit(current) //draw
-		log.Printf("Came From: %v", current)
+		// log.Printf("Came From: %v", current)
 		for _, next := range g.Neighbours(current) {
 			if v, ok := cameFrom[next]; !ok || !v {
-				log.Printf("%v : %#v", current, frontier.nodes)
+				// log.Printf("%v : %#v", current, frontier.nodes)
 				frontier.Put(next)
 				cameFrom[next] = true
 			}
@@ -48,37 +48,39 @@ func BreadthFirstSearch2(g *SquareGrid, start Node) map[Node]bool {
 }
 
 // BreadthFirstSearch3 ...
-func BreadthFirstSearch3(g *SquareGrid, start, target Node) map[Node]*Node {
+func BreadthFirstSearch3(g *SquareGrid, start, target Node) {
 	queue := NewQueue()
 	queue.Put(start)
-	cameFrom := map[Node]*Node{}
-	cameFrom[start] = nil
+	cameFrom := map[Node]struct{}{}
+	cameFrom[start] = struct{}{}
 
 	log.Printf("Start node: %v", start)   //debug
 	log.Printf("Target node: %v", target) //debug
-	g.Start(start)                        //draw
-	g.Target(target)                      //draw
 
 	for !queue.Empty() {
+		// log.Printf("QUEUE: %v", queue.List()) //debug
 		current := queue.Get()
-		log.Printf("Current node : %v", current) //debug
+		// log.Printf("Current node : %v", current) //debug
+
 		if current == target {
-			log.Print("Goal has reached") //debug
+			// log.Print("Goal has reached") //debug
 			break
 		}
 
-		if current != start {
-			g.Visit(current)
-		}
-		log.Printf("Came From: %v", current) //debug
+		g.Visit(current) //draw and debug
 
 		for _, next := range g.Neighbours(current) {
 			if _, ok := cameFrom[next]; !ok {
+				cameFrom[next] = struct{}{}
 				queue.Put(next)
-				cameFrom[next] = &current
 			}
 		}
-		log.Printf("%v : %v", current, cameFrom)
+		// log.Printf("Came from : %v", cameFrom)
 	}
-	return cameFrom
+	log.Printf("Came from : %v", cameFrom)
+}
+
+// DijkstraSearch ...
+func DijkstraSearch(g *SquareGrid, start, target Node) {
+
 }

@@ -18,6 +18,9 @@ type SquareGrid struct {
 	height       uint32            //height of grid
 	obstructions map[Node]struct{} //list of obstructions in the grid, not passable
 
+	weights map[Node]map[Node]int //movements cost to node
+	// todo (weights): potential problem of duplicating and lost elements for map[{0,0}]map[{0,1}] = 1; map[{0,1}]map[{0,0}] = 1,
+	// the same movements and cost
 	visited map[Node]struct{} //list of visited nodes
 	start   Node              //start node
 	target  Node              //target node
@@ -25,7 +28,6 @@ type SquareGrid struct {
 
 // InBound is it node locatated in the grid
 func (g *SquareGrid) InBound(node Node) bool {
-	// log.Printf("%v |  0 <= %d < %d  && | 0 <= %d < %d", node, node[0], g.width, node[1], g.height)
 	return (0 <= node[0] && node[0] < g.width) &&
 		(0 <= node[1] && node[1] < g.height)
 }
@@ -50,10 +52,10 @@ func NodeFilter(nodes []Node, filter func(n Node) bool) []Node {
 // Neighbours get all neibourhoods
 func (g *SquareGrid) Neighbours(node Node) []Node {
 	nodes := []Node{
-		{node[0] + 1, node[0]},
-		{node[0], node[0] - 1},
-		{node[0] - 1, node[0]},
-		{node[0], node[0] + 1},
+		{node[0] + 1, node[1]},
+		{node[0], node[1] - 1},
+		{node[0] - 1, node[1]},
+		{node[0], node[1] + 1},
 	}
 
 	return NodeFilter(nodes, func(n Node) bool {
@@ -61,22 +63,27 @@ func (g *SquareGrid) Neighbours(node Node) []Node {
 	})
 }
 
+// Cost of movements from `node` to `node`
+func (g *SquareGrid) Cost(from, to Node) int {
+	return 0 //todo
+}
+
 // NewSquareGrid new instance of grid
 func NewSquareGrid(width, height uint32, obstructions map[Node]struct{}) *SquareGrid {
 	log.Printf("Create rectangle grid, width: %v, height: %v, obstructions: %v", width, height, obstructions)
+	if obstructions == nil {
+		obstructions = make(map[Node]struct{})
+	}
 	return &SquareGrid{
 		width:        width,
 		height:       height,
 		obstructions: obstructions,
+		weights:      map[Node]map[Node]int{},
 	}
 }
 
 // AddObstructions add list of walls as nodes
 func (g *SquareGrid) AddObstructions(nodes ...Node) {
-	if g.obstructions == nil {
-		g.obstructions = make(map[Node]struct{})
-	}
-
 	for _, n := range nodes {
 		if g.InBound(n) {
 			g.obstructions[n] = struct{}{}
@@ -124,6 +131,11 @@ func (g *SquareGrid) String() string {
 		out += "\n\r"
 	}
 	return out
+}
+
+// Image of curent grid state
+func (g *SquareGrid) Image() {
+	// todo; use it for shapshot of current grid state, for creating a gif in future
 }
 
 // Visit set node of grid as visited (only for)

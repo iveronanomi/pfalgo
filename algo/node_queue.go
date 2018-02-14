@@ -1,20 +1,16 @@
 package algo
 
-// Queue stucture
+// Queue stucture (actually it's a stack)
 type Queue struct {
 	nodes []Node
 }
 
-// IQueue interface describes walking by nodes queue
-type IQueue interface {
-	PopLeft() INode
-	Empty() bool
+// IStack interface describes walking by nodes queue //todo
+type IStack interface {
+	IsEmpty() bool
 	Put(n INode)
-	Get() INode
-}
-
-// INode interface described node functionality
-type INode interface {
+	Pop() INode
+	Len() uint64
 }
 
 // NewQueue create new Queue
@@ -22,6 +18,11 @@ func NewQueue() *Queue {
 	return &Queue{
 		nodes: []Node{},
 	}
+}
+
+// List get list of available nodes
+func (q *Queue) List() []Node {
+	return q.nodes
 }
 
 // PopLeft get first node an remove it from queue

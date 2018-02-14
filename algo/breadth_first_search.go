@@ -34,14 +34,51 @@ func BreadthFirstSearch2(g *SquareGrid, start Node) map[Node]bool {
 
 	for !frontier.Empty() {
 		current := frontier.Get()
-		// log.Printf("Came From: %v", current)
+		g.Visit(current) //draw
+		log.Printf("Came From: %v", current)
 		for _, next := range g.Neighbours(current) {
 			if v, ok := cameFrom[next]; !ok || !v {
-				// log.Printf("%v : %#v", current, frontier.nodes)
+				log.Printf("%v : %#v", current, frontier.nodes)
 				frontier.Put(next)
 				cameFrom[next] = true
 			}
 		}
+	}
+	return cameFrom
+}
+
+// BreadthFirstSearch3 ...
+func BreadthFirstSearch3(g *SquareGrid, start, target Node) map[Node]*Node {
+	queue := NewQueue()
+	queue.Put(start)
+	cameFrom := map[Node]*Node{}
+	cameFrom[start] = nil
+
+	log.Printf("Start node: %v", start)   //debug
+	log.Printf("Target node: %v", target) //debug
+	g.Start(start)                        //draw
+	g.Target(target)                      //draw
+
+	for !queue.Empty() {
+		current := queue.Get()
+		log.Printf("Current node : %v", current) //debug
+		if current == target {
+			log.Print("Goal has reached") //debug
+			break
+		}
+
+		if current != start {
+			g.Visit(current)
+		}
+		log.Printf("Came From: %v", current) //debug
+
+		for _, next := range g.Neighbours(current) {
+			if _, ok := cameFrom[next]; !ok {
+				queue.Put(next)
+				cameFrom[next] = &current
+			}
+		}
+		log.Printf("%v : %v", current, cameFrom)
 	}
 	return cameFrom
 }

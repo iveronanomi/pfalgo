@@ -5,15 +5,15 @@ import (
 )
 
 // An NodeItem is something we manage in a priority queue.
-type NodeItem struct {
-	value    string // The value of the item; arbitrary.
-	priority int    // The priority of the item in the queue.
+type Item struct {
+	value    Node // The value of the item; arbitrary.
+	priority int  // The priority of the item in the queue.
 	// The index is needed by update and is maintained by the heap.Interface methods.
 	index int // The index of the item in the heap.
 }
 
 // A PriorityQueue implements heap.Interface and holds NodeItems.
-type PriorityQueue []*NodeItem
+type PriorityQueue []*Item
 
 func (pq PriorityQueue) Len() int { return len(pq) }
 
@@ -32,7 +32,7 @@ func (pq PriorityQueue) Swap(i, j int) {
 // Push item to queue
 func (pq *PriorityQueue) Push(x interface{}) {
 	n := len(*pq)
-	item := x.(*NodeItem)
+	item := x.(*Item)
 	item.index = n
 	*pq = append(*pq, item)
 }
@@ -48,7 +48,7 @@ func (pq *PriorityQueue) Pop() interface{} {
 }
 
 // update modifies the priority and value of an item in the queue.
-func (pq *PriorityQueue) update(item *NodeItem, value string, priority int) {
+func (pq *PriorityQueue) update(item *Item, value Node, priority int) {
 	item.value = value
 	item.priority = priority
 	heap.Fix(pq, item.index)

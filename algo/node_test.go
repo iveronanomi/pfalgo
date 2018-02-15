@@ -9,8 +9,8 @@ type NodeSuite struct{}
 var _ = Suite(&NodeSuite{})
 
 func (s *NodeSuite) TestNodeIsPassable(c *C) {
-	n := &AdvancedNode{}
-	n.setFlag(flagNotPassable)
+	n := NewNode(0, 0, 0)
+	n.setFlag(statusNotPassable)
 
 	r := n.IsPassable()
 
@@ -18,8 +18,8 @@ func (s *NodeSuite) TestNodeIsPassable(c *C) {
 }
 
 func (s *NodeSuite) TestNodeIsVisited(c *C) {
-	n := &AdvancedNode{}
-	n.setFlag(flagVisited)
+	n := NewNode(0, 0, 0)
+	n.setFlag(statusVisited)
 
 	r := n.IsVisited()
 
@@ -27,8 +27,8 @@ func (s *NodeSuite) TestNodeIsVisited(c *C) {
 }
 
 func (s *NodeSuite) TestNodeIsTarget(c *C) {
-	n := &AdvancedNode{}
-	n.setFlag(flagTarget)
+	n := NewNode(0, 0, 0)
+	n.setFlag(statusTarget)
 
 	r := n.IsTarget()
 
@@ -36,8 +36,8 @@ func (s *NodeSuite) TestNodeIsTarget(c *C) {
 }
 
 func (s *NodeSuite) TestNodeFlagsComplicated(c *C) {
-	n := &AdvancedNode{}
-	n.setFlag(flagNotPassable | flagStart)
+	n := NewNode(0, 0, 0)
+	n.setFlag(statusNotPassable | statusStart)
 
 	c.Assert(n.IsTarget(), Equals, false)
 	c.Assert(n.IsPassable(), Equals, false)
@@ -46,30 +46,30 @@ func (s *NodeSuite) TestNodeFlagsComplicated(c *C) {
 }
 
 func (s *NodeSuite) TestNodeHasTwoFlags_ExpectYes(c *C) {
-	n := &AdvancedNode{
-		flags: (flagNotPassable | flagStart | flagTarget | flagVisited),
+	n := &Node{
+		status: (statusNotPassable | statusStart | statusTarget | statusVisited),
 	}
 
-	hf := n.hasFlag(flagNotPassable | flagStart)
+	hf := n.hasFlag(statusNotPassable | statusStart)
 
 	c.Assert(hf, Equals, true)
 }
 
 func (s *NodeSuite) TestNodeHasTwoFlags_ExpectNot(c *C) {
-	n := &AdvancedNode{
-		flags: (flagNotPassable | flagTarget | flagVisited),
+	n := &Node{
+		status: (statusNotPassable | statusTarget | statusVisited),
 	}
 
-	hf := n.hasFlag(flagNotPassable | flagStart)
+	hf := n.hasFlag(statusNotPassable | statusStart)
 
 	c.Assert(hf, Equals, false)
 }
 
 func (s *NodeSuite) TestNodeSetPassable(c *C) {
-	n := &AdvancedNode{
-		flags: flagVisited,
+	n := &Node{
+		status: statusVisited,
 	}
-	n.removeFlag(flagVisited)
+	n.removeFlag(statusVisited)
 
 	visited := n.IsVisited()
 

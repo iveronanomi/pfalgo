@@ -4,7 +4,7 @@ import (
 	"container/heap"
 )
 
-// An NodeItem is something we manage in a priority queue.
+// An Item is something we manage in a priority queue.
 type Item struct {
 	value    Node // The value of the item; arbitrary.
 	priority int  // The priority of the item in the queue.

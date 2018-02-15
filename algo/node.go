@@ -23,8 +23,8 @@ type Node struct {
 }
 
 // NewNode create instance of node
-func NewNode(x, y uint32, weight int32) *Node {
-	return &Node{
+func NewNode(x, y uint32, weight int32) Node {
+	return Node{
 		pos:    [2]uint32{x, y},
 		weight: weight,
 	}

@@ -28,8 +28,8 @@ type SquareGrid struct {
 
 // InBound is it node locatated in the grid
 func (g *SquareGrid) InBound(node Node) bool {
-	return (0 <= node[0] && node[0] < g.width) &&
-		(0 <= node[1] && node[1] < g.height)
+	x, y := node.Position()
+	return (0 <= x && x < g.width) && (0 <= y && y < g.height)
 }
 
 // Passable is it passable node
@@ -51,11 +51,12 @@ func NodeFilter(nodes []Node, filter func(n Node) bool) []Node {
 
 // Neighbours get all neibourhoods
 func (g *SquareGrid) Neighbours(node Node) []Node {
+	x, y := node.Position()
 	nodes := []Node{
-		{node[0] + 1, node[1]},
-		{node[0], node[1] - 1},
-		{node[0] - 1, node[1]},
-		{node[0], node[1] + 1},
+		NewNode(x+1, y, 0),
+		NewNode(x, y-1, 0),
+		NewNode(x-1, y, 0),
+		NewNode(x, y+1, 0),
 	}
 
 	return NodeFilter(nodes, func(n Node) bool {
@@ -69,15 +70,12 @@ func (g *SquareGrid) Cost(from, to Node) int {
 }
 
 // NewSquareGrid new instance of grid
-func NewSquareGrid(width, height uint32, obstructions map[Node]struct{}) *SquareGrid {
-	log.Printf("Create rectangle grid, width: %v, height: %v, obstructions: %v", width, height, obstructions)
-	if obstructions == nil {
-		obstructions = make(map[Node]struct{})
-	}
+func NewSquareGrid(width, height uint32) *SquareGrid {
+	log.Printf("Create rectangle grid, height: %v, width: %v", height, width)
 	return &SquareGrid{
 		width:        width,
 		height:       height,
-		obstructions: obstructions,
+		obstructions: map[Node]struct{}{},
 		weights:      map[Node]map[Node]int{},
 	}
 }
@@ -87,7 +85,7 @@ func (g *SquareGrid) AddObstructions(nodes ...Node) {
 	for _, n := range nodes {
 		if g.InBound(n) {
 			g.obstructions[n] = struct{}{}
-			// log.Printf("Add node: %v", n)
+			// log.Printf("Add obstruction node: %v", n)
 			continue
 		}
 		// log.Printf("NOTICE: not in bound: %v", n)
@@ -96,10 +94,11 @@ func (g *SquareGrid) AddObstructions(nodes ...Node) {
 
 // AddWall add wall according on Heigt, Width
 func (g *SquareGrid) AddWall(start Node, height, width int) {
-	// log.Printf("Draw a wall from %v width: %v, height: %v", start, height, width)
-	for x := int(start[0]); x < width+int(start[0]); x++ {
-		for y := int(start[1]); y < height+int(start[1]); y++ {
-			g.AddObstructions(Node{uint32(x), uint32(y)})
+	xPos, yPos := start.Position()
+	log.Printf("Draw a wall %v x %v from %v point", height, width, start)
+	for x := int(xPos); x < width+int(xPos); x++ {
+		for y := int(yPos); y < height+int(yPos); y++ {
+			g.AddObstructions(NewNode(uint32(x), uint32(y), 0))
 		}
 	}
 }
@@ -109,7 +108,7 @@ func (g *SquareGrid) String() string {
 	out := ""
 	for y := 0; y < int(g.height); y++ {
 		for x := 0; x < int(g.width); x++ {
-			node := Node{uint32(x), uint32(y)}
+			node := NewNode(uint32(x), uint32(y), 0)
 			if g.target == node {
 				out += charTarget
 				continue
@@ -135,7 +134,7 @@ func (g *SquareGrid) String() string {
 
 // Image of curent grid state
 func (g *SquareGrid) Image() {
-	// todo; use it for shapshot of current grid state, for creating a gif in future
+	// todo; use it for snapshot of current grid state, for creating a gif in future
 }
 
 // Visit set node of grid as visited (only for)

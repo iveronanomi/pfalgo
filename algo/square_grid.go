@@ -9,21 +9,36 @@ const (
 	charGrid        = " ◻"
 	charStart       = " Ⓐ"
 	charTarget      = " Ⓩ"
-	charVisited     = " ○"
+	charVisited     = " ◆"
+)
+
+// WalkBehaviour ..
+type WalkBehaviour uint8
+
+const (
+	// DiagonalyWalk ...
+	DiagonalyWalk WalkBehaviour = 1 << iota
+	// LinearWalk ...
+	LinearWalk
+	// AllWalk - walks all directions Diagonaly and Linear
+	AllWalk WalkBehaviour = (DiagonalyWalk | LinearWalk)
 )
 
 // SquareGrid space
 type SquareGrid struct {
-	width        uint32            //width of grid
-	height       uint32            //height of grid
+	width         uint32        //width of grid
+	height        uint32        //height of grid
+	walkBehaviour WalkBehaviour //is it possible to walk to node: diagonal/linear or both
+
 	obstructions map[Node]struct{} //list of obstructions in the grid, not passable
 
 	weights map[Node]map[Node]int //movements cost to node
 	// todo (weights): potential problem of duplicating and lost elements for map[{0,0}]map[{0,1}] = 1; map[{0,1}]map[{0,0}] = 1,
 	// the same movements and cost
-	visited map[Node]struct{} //list of visited nodes
-	start   Node              //start node
-	target  Node              //target node
+	visited map[INode]struct{} //list of visited nodes
+	start   Node               //start node
+	target  Node               //target node
+
 }
 
 // InBound is it node locatated in the grid
@@ -50,13 +65,26 @@ func NodeFilter(nodes []Node, filter func(n Node) bool) []Node {
 }
 
 // Neighbours get all neibourhoods
-func (g *SquareGrid) Neighbours(node Node) []Node {
+func (g *SquareGrid) Neighbours(node INode) []Node {
 	x, y := node.Position()
-	nodes := []Node{
-		NewNode(x+1, y, 0),
-		NewNode(x, y-1, 0),
-		NewNode(x-1, y, 0),
-		NewNode(x, y+1, 0),
+	nodes := make([]Node, 0, 8)
+
+	if (DiagonalyWalk)&g.walkBehaviour == DiagonalyWalk {
+		nodes = append(nodes,
+			NewNode(x-1, y-1, 0),
+			NewNode(x+1, y+1, 0),
+			NewNode(x+1, y-1, 0),
+			NewNode(x-1, y+1, 0),
+		)
+	}
+
+	if (LinearWalk)&g.walkBehaviour == LinearWalk {
+		nodes = append(nodes,
+			NewNode(x, y-1, 0),
+			NewNode(x+1, y, 0),
+			NewNode(x, y+1, 0),
+			NewNode(x-1, y, 0),
+		)
 	}
 
 	return NodeFilter(nodes, func(n Node) bool {
@@ -65,18 +93,19 @@ func (g *SquareGrid) Neighbours(node Node) []Node {
 }
 
 // Cost of movements from `node` to `node`
-func (g *SquareGrid) Cost(from, to Node) int {
+func (g *SquareGrid) Cost(from, to INode) int {
 	return 0 //todo
 }
 
 // NewSquareGrid new instance of grid
-func NewSquareGrid(width, height uint32) *SquareGrid {
+func NewSquareGrid(width, height uint32, walkType WalkBehaviour) *SquareGrid {
 	log.Printf("Create rectangle grid, height: %v, width: %v", height, width)
 	return &SquareGrid{
-		width:        width,
-		height:       height,
-		obstructions: map[Node]struct{}{},
-		weights:      map[Node]map[Node]int{},
+		width:         width,
+		height:        height,
+		obstructions:  map[Node]struct{}{},
+		weights:       map[Node]map[Node]int{},
+		walkBehaviour: walkType,
 	}
 }
 
@@ -138,9 +167,9 @@ func (g *SquareGrid) Image() {
 }
 
 // Visit set node of grid as visited (only for)
-func (g *SquareGrid) Visit(node Node) {
+func (g *SquareGrid) Visit(node INode) {
 	if g.visited == nil {
-		g.visited = make(map[Node]struct{})
+		g.visited = make(map[INode]struct{})
 	}
 	g.visited[node] = struct{}{}
 }

@@ -49,7 +49,7 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return item.value
 }
 
-// update modifies the priority and value of an item in the queue.
+// Update modifies the priority and value of an item in the queue.
 func (pq *PriorityQueue) Update(item *Item, value Node, priority int) {
 	item.value = value
 	item.priority = priority
@@ -65,4 +65,5 @@ func (pq *PriorityQueue) PriorityPush(x interface{}, priority int) {
 	}
 	item.index = n
 	*pq = append(*pq, item)
+	pq.Update(item, item.value, priority)
 }

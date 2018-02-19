@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/iveronanomi/pfalgo/algo"
 )
 
@@ -24,9 +22,13 @@ func main() {
 	// algo.BreadthFirstSearch(sg, algo.NewNode(24, 12, 0), algo.NewNode(24, 0, 0))
 	// fmt.Println(sg.String())
 
-	// algo.GreadyBreadthFirstSearch(sg, start, end)
+	algo.GreadyBreadthFirstSearch(sg, start, end)
 	// fmt.Println(sg.String())
+	sg.SaveAnimation()
 
-	algo.Dijkstra(sg, start, end)
-	fmt.Println(sg.String())
+	// algo.Dijkstra(sg, start, end)
+	// fmt.Println(sg.String())
+	// rp := algo.ReconstructPath(cp, start, end, true)
+	// fmt.Println(cp)
+	// fmt.Println(rp)
 }

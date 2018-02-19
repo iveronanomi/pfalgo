@@ -46,8 +46,8 @@ func Dijkstra(g *SquareGrid, start, target INode) (map[INode]INode, map[INode]in
 	return cameFrom, costSoFar
 }
 
-// ReversePath ...
-func ReversePath(cameFrom map[INode]INode, start, target INode) []INode {
+// ReconstructPath ...
+func ReconstructPath(cameFrom map[INode]INode, start, target INode, reversed bool) []INode {
 	current := target
 	path := []INode{}
 	for !current.Equal(start) {
@@ -55,5 +55,11 @@ func ReversePath(cameFrom map[INode]INode, start, target INode) []INode {
 		current = cameFrom[current]
 	}
 	path = append(path, start)
+	if !reversed {
+		return path
+	}
+	for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
+		path[i], path[j] = path[j], path[i]
+	}
 	return path
 }

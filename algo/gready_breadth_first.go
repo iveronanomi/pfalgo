@@ -23,13 +23,13 @@ func GreadyBreadthFirstSearch(g *SquareGrid, start, target INode) map[INode]INod
 		}
 
 		g.Visit(current) //debug: mark graph node as visited
-
-		for _, next := range g.Neighbours(current) {
+		neighbours := g.Neighbours(current)
+		for _, next := range neighbours {
 			if _, ok := cameFrom[next]; !ok {
-				p := heuristic(target, next)
-				log.Printf("target: %v, next: %v, priorirt: %v", target, next, p)
+				priority := heuristic(target, next)
+				log.Printf("next: %v, priorirt: %v", next, priority)
 				cameFrom[next] = current
-				queue.PriorityPush(next, p)
+				queue.PriorityPush(next, priority)
 			}
 		}
 	}

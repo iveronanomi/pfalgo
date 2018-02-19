@@ -39,6 +39,7 @@ type SquareGrid struct {
 	start   Node               //start node
 	target  Node               //target node
 
+	gif *gifGraph
 }
 
 // InBound is it node locatated in the grid
@@ -86,6 +87,7 @@ func (g *SquareGrid) Neighbours(node INode) []Node {
 			NewNode(x-1, y, 0),
 		)
 	}
+	// log.Printf("%d Neigbours before filtering", len(nodes))
 
 	return NodeFilter(nodes, func(n Node) bool {
 		return g.Passable(n) && g.InBound(n)
@@ -100,12 +102,14 @@ func (g *SquareGrid) Cost(from, to INode) int {
 // NewSquareGrid new instance of grid
 func NewSquareGrid(width, height uint32, walkType WalkBehaviour) *SquareGrid {
 	log.Printf("Create rectangle grid, height: %v, width: %v", height, width)
+
 	return &SquareGrid{
 		width:         width,
 		height:        height,
 		obstructions:  map[Node]struct{}{},
 		weights:       map[Node]map[Node]int{},
 		walkBehaviour: walkType,
+		gif:           NewGifGraph(int(width), int(height)),
 	}
 }
 
@@ -128,6 +132,7 @@ func (g *SquareGrid) AddWall(start Node, height, width int) {
 	for x := int(xPos); x < width+int(xPos); x++ {
 		for y := int(yPos); y < height+int(yPos); y++ {
 			g.AddObstructions(NewNode(uint32(x), uint32(y), 0))
+			g.gif.SetWall(x, y)
 		}
 	}
 }
@@ -161,9 +166,9 @@ func (g *SquareGrid) String() string {
 	return out
 }
 
-// Image of curent grid state
-func (g *SquareGrid) Image() {
-	// todo; use it for snapshot of current grid state, for creating a gif in future
+// SaveAnimation of curent grid state
+func (g *SquareGrid) SaveAnimation() {
+	g.gif.Save()
 }
 
 // Visit set node of grid as visited (only for)
@@ -172,14 +177,24 @@ func (g *SquareGrid) Visit(node INode) {
 		g.visited = make(map[INode]struct{})
 	}
 	g.visited[node] = struct{}{}
+
+	// for image draw
+	x, y := node.Position()
+	g.gif.Visit(int(x), int(y))
 }
 
 // Start set start node (only for draw)
 func (g *SquareGrid) Start(node Node) {
 	g.start = node
+	//for image draw
+	x, y := node.Position()
+	g.gif.SetStart(int(x), int(y))
 }
 
 // Target set start node (only for draw)
 func (g *SquareGrid) Target(node Node) {
 	g.target = node
+	//for image draw
+	x, y := node.Position()
+	g.gif.SetFinish(int(x), int(y))
 }

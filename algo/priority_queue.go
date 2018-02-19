@@ -50,8 +50,19 @@ func (pq *PriorityQueue) Pop() interface{} {
 }
 
 // update modifies the priority and value of an item in the queue.
-func (pq *PriorityQueue) update(item *Item, value Node, priority int) {
+func (pq *PriorityQueue) Update(item *Item, value Node, priority int) {
 	item.value = value
 	item.priority = priority
 	heap.Fix(pq, item.index)
+}
+
+// PriorityPush item to queue
+func (pq *PriorityQueue) PriorityPush(x interface{}, priority int) {
+	n := len(*pq)
+	item := &Item{
+		value:    x.(Node),
+		priority: priority,
+	}
+	item.index = n
+	*pq = append(*pq, item)
 }

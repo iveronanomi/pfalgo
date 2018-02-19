@@ -1,10 +1,14 @@
 package algo
 
-import "log"
+import (
+	"container/heap"
+	"log"
+)
 
 // Dijkstra search
 func Dijkstra(g *SquareGrid, start, target INode) (map[INode]INode, map[INode]int) {
-	q := PriorityQueue{}
+	q := &PriorityQueue{}
+	heap.Init(q)
 	q.Push(start)
 	cameFrom := map[INode]INode{
 		start: nil,
@@ -14,7 +18,7 @@ func Dijkstra(g *SquareGrid, start, target INode) (map[INode]INode, map[INode]in
 	}
 
 	var itterations int //debug
-	for q.Len() != 0 {
+	for q.Len() > 0 {
 		itterations++ //debug
 		item := q.Pop()
 		current, ok := item.(INode)
@@ -33,11 +37,23 @@ func Dijkstra(g *SquareGrid, start, target INode) (map[INode]INode, map[INode]in
 			if v, ok := costSoFar[next]; !ok || newCost < v {
 				costSoFar[next] = newCost
 				// priority := newCost
-				q.Push(next) //set priorirt for node
+				q.PriorityPush(next, newCost) //set priorirt for node
 				cameFrom[next] = current
 			}
 		}
 	}
 	log.Printf("Itterations %d", itterations) //debug
 	return cameFrom, costSoFar
+}
+
+// ReversePath ...
+func ReversePath(cameFrom map[INode]INode, start, target INode) []INode {
+	current := target
+	path := []INode{}
+	for !current.Equal(start) {
+		path = append(path, current)
+		current = cameFrom[current]
+	}
+	path = append(path, start)
+	return path
 }

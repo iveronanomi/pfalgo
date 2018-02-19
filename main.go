@@ -21,11 +21,12 @@ func main() {
 	sg.Start(start) //only for a draw
 	sg.Target(end)  //only for a draw
 
-	// algo.BreadthFirst(sg, algo.NewNode(24, 12, 0), algo.NewNode(24, 0, 0))
+	// algo.BreadthFirstSearch(sg, algo.NewNode(24, 12, 0), algo.NewNode(24, 0, 0))
+	// fmt.Println(sg.String())
 
+	// algo.GreadyBreadthFirstSearch(sg, start, end)
 	// fmt.Println(sg.String())
 
 	algo.Dijkstra(sg, start, end)
-
 	fmt.Println(sg.String())
 }

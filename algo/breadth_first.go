@@ -1,34 +1,27 @@
 package algo
 
-// BreadthFirst ...
-func BreadthFirst(g *SquareGrid, start, target Node) {
+// BreadthFirstSearch ...
+func BreadthFirstSearch(g *SquareGrid, start, target INode) map[INode]INode {
 	queue := NewQueue()
+
 	queue.Put(start)
-	cameFrom := map[Node]struct{}{}
-	cameFrom[start] = struct{}{}
-
-	// log.Printf("Start node: %v", start)   //debug
-	// log.Printf("Target node: %v", target) //debug
-
+	cameFrom := map[INode]INode{
+		start: nil,
+	}
 	for !queue.Empty() {
-		// log.Printf("QUEUE: %v", queue.List()) //debug
 		current := queue.Get()
-		// log.Printf("Current node : %v", current) //debug
-
-		if current == target {
-			// log.Print("Goal has reached") //debug
+		if current.Equal(target) {
 			break
 		}
 
-		g.Visit(current) //draw and debug
+		g.Visit(current) //debug: mark graph node as visited
 
 		for _, next := range g.Neighbours(current) {
 			if _, ok := cameFrom[next]; !ok {
-				cameFrom[next] = struct{}{}
+				cameFrom[next] = current
 				queue.Put(next)
 			}
 		}
-		// log.Printf("Came from : %v", cameFrom)
 	}
-	// log.Printf("Came from : %v", cameFrom)
+	return cameFrom
 }

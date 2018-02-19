@@ -21,7 +21,7 @@ const (
 	// LinearWalk ...
 	LinearWalk
 	// AllWalk - walks all directions Diagonaly and Linear
-	AllWalk WalkBehaviour = (DiagonalyWalk | LinearWalk)
+	AllWalk
 )
 
 // SquareGrid space
@@ -69,7 +69,7 @@ func (g *SquareGrid) Neighbours(node INode) []Node {
 	x, y := node.Position()
 	nodes := make([]Node, 0, 8)
 
-	if (DiagonalyWalk)&g.walkBehaviour == DiagonalyWalk {
+	if g.walkBehaviour == DiagonalyWalk || g.walkBehaviour == AllWalk {
 		nodes = append(nodes,
 			NewNode(x-1, y-1, 0),
 			NewNode(x+1, y+1, 0),
@@ -78,7 +78,7 @@ func (g *SquareGrid) Neighbours(node INode) []Node {
 		)
 	}
 
-	if (LinearWalk)&g.walkBehaviour == LinearWalk {
+	if g.walkBehaviour == LinearWalk || g.walkBehaviour == AllWalk {
 		nodes = append(nodes,
 			NewNode(x, y-1, 0),
 			NewNode(x+1, y, 0),

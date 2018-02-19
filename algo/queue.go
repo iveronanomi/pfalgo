@@ -2,7 +2,7 @@ package algo
 
 // Queue stucture (actually it's a stack)
 type Queue struct {
-	nodes []Node
+	nodes []INode
 }
 
 // IStack interface describes walking by nodes queue //todo
@@ -16,17 +16,17 @@ type IStack interface {
 // NewQueue create new Queue
 func NewQueue() *Queue {
 	return &Queue{
-		nodes: []Node{},
+		nodes: []INode{},
 	}
 }
 
 // List get list of available nodes
-func (q *Queue) List() []Node {
+func (q *Queue) List() []INode {
 	return q.nodes
 }
 
 // PopLeft get first node an remove it from queue
-func (q *Queue) PopLeft() Node {
+func (q *Queue) PopLeft() INode {
 	n := q.nodes[0]
 	q.nodes = q.nodes[1:]
 	return n
@@ -38,11 +38,11 @@ func (q *Queue) Empty() bool {
 }
 
 // Put in queue
-func (q *Queue) Put(n Node) {
+func (q *Queue) Put(n INode) {
 	q.nodes = append(q.nodes, n)
 }
 
 // Get same as pop left
-func (q *Queue) Get() Node {
+func (q *Queue) Get() INode {
 	return q.PopLeft()
 }

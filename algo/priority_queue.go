@@ -1,13 +1,11 @@
 package algo
 
-import (
-	"container/heap"
-)
+import "container/heap"
 
 // An Item is something we manage in a priority queue.
 type Item struct {
-	value    Node // The value of the item; arbitrary.
-	priority int  // The priority of the item in the queue.
+	value    INode // The value of the item; arbitrary.
+	priority int   // The priority of the item in the queue.
 	// The index is needed by update and is maintained by the heap.Interface methods.
 	index int // The index of the item in the heap.
 }
@@ -18,8 +16,7 @@ type PriorityQueue []*Item
 func (pq PriorityQueue) Len() int { return len(pq) }
 
 func (pq PriorityQueue) Less(i, j int) bool {
-	// We want Pop to give us the highest, not lowest, priority so we use greater than here.
-	return pq[i].priority > pq[j].priority
+	return pq[i].priority < pq[j].priority
 }
 
 // Swap items in queue
@@ -32,9 +29,7 @@ func (pq PriorityQueue) Swap(i, j int) {
 // Push item to queue
 func (pq *PriorityQueue) Push(x interface{}) {
 	n := len(*pq)
-	item := &Item{
-		value: x.(Node),
-	}
+	item := x.(*Item)
 	item.index = n
 	*pq = append(*pq, item)
 }
@@ -46,24 +41,27 @@ func (pq *PriorityQueue) Pop() interface{} {
 	item := old[n-1]
 	item.index = -1 // for safety
 	*pq = old[0 : n-1]
-	return item.value
+	return item
 }
 
-// Update modifies the priority and value of an item in the queue.
-func (pq *PriorityQueue) Update(item *Item, value Node, priority int) {
-	item.value = value
-	item.priority = priority
-	heap.Fix(pq, item.index)
+// NewPriorityQueue create new priorirt queue
+func NewPriorityQueue() *PriorityQueue {
+	q := &PriorityQueue{}
+	heap.Init(q)
+	return q
 }
 
-// PriorityPush item to queue
-func (pq *PriorityQueue) PriorityPush(x interface{}, priority int) {
-	n := len(*pq)
+// Add node item to queue
+func (pq *PriorityQueue) Add(node INode, priority int) {
 	item := &Item{
-		value:    x.(Node),
+		value:    node.(INode),
 		priority: priority,
 	}
-	item.index = n
-	*pq = append(*pq, item)
-	pq.Update(item, item.value, priority)
+	heap.Push(pq, item)
+}
+
+// Get node element
+func (pq *PriorityQueue) Get() INode {
+	item := heap.Pop(pq).(*Item)
+	return item.value
 }

@@ -1,35 +1,30 @@
 package algo
 
 import (
-	"container/heap"
-	"log"
 	"math"
 )
 
 // GreadyBreadthFirstSearch ...
 func GreadyBreadthFirstSearch(g *SquareGrid, start, target INode) map[INode]INode {
-	queue := &PriorityQueue{}
-	heap.Init(queue)
-	queue.Push(start)
-	cameFrom := map[INode]INode{
-		start: nil,
-	}
+	queue := NewPriorityQueue()
+	queue.Add(start, 0)
+	cameFrom := map[INode]INode{start: nil}
 
 	for queue.Len() > 0 {
-		e := queue.Pop()
-		current := e.(INode)
+		current := queue.Get()
 		if current.Equal(target) {
 			break
 		}
 
-		g.Visit(current) //debug: mark graph node as visited
-		neighbours := g.Neighbours(current)
-		for _, next := range neighbours {
+		if !current.Equal(start) {
+			g.Visit(current) //debug: mark graph node as visited
+		}
+
+		for _, next := range g.Neighbours(current) {
 			if _, ok := cameFrom[next]; !ok {
-				priority := heuristic(target, next)
-				log.Printf("next: %v, priorirt: %v", next, priority)
+				// log.Printf("next: %v, priority: %v", next, priority)
+				queue.Add(next, heuristic(target, next))
 				cameFrom[next] = current
-				queue.PriorityPush(next, priority)
 			}
 		}
 	}
@@ -39,6 +34,7 @@ func GreadyBreadthFirstSearch(g *SquareGrid, start, target INode) map[INode]INod
 func heuristic(a, b INode) int {
 	ax, ay := a.Position()
 	bx, by := b.Position()
-	result := math.Abs(float64(ax)-float64(bx)) + math.Abs(float64(ay)-float64(by))
+	result := math.Abs(
+		float64(ax)-float64(bx)) + math.Abs(float64(ay)-float64(by))
 	return int(result)
 }

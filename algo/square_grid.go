@@ -95,8 +95,8 @@ func (g *SquareGrid) Neighbours(node INode) []Node {
 }
 
 // Cost of movements from `node` to `node`
-func (g *SquareGrid) Cost(from, to INode) int {
-	return 0 //todo
+func (g *SquareGrid) Cost(from, to INode) uint32 {
+	return to.Cost()
 }
 
 // NewSquareGrid new instance of grid

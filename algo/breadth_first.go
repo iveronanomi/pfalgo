@@ -14,8 +14,9 @@ func BreadthFirstSearch(g *SquareGrid, start, target INode) map[INode]INode {
 			break
 		}
 
-		g.Visit(current) //debug: mark graph node as visited
-
+		if !current.Equal(start) {
+			g.Visit(current) //debug: mark graph node as visited
+		}
 		for _, next := range g.Neighbours(current) {
 			if _, ok := cameFrom[next]; !ok {
 				cameFrom[next] = current

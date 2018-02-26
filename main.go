@@ -11,9 +11,9 @@ func main() {
 	sg, start, end := getGrid()
 	// algo.BreadthFirstSearch(sg, start, end)
 
-	// algo.GreadyBreadthFirstSearch(sg, start, end)
+	algo.GreadyBreadthFirstSearch(sg, start, end)
 
-	algo.Dijkstra(sg, start, end)
+	// algo.Dijkstra(sg, start, end)
 
 	// rp := algo.ReconstructPath(cp, start, end, true)
 	// fmt.Println(cp)

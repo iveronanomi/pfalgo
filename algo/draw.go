@@ -8,9 +8,7 @@ import (
 )
 
 var (
-	// scale        = 10 //todo
 	defaultDelay = 0
-	filename     = "out/out.gif"
 	pixSpace     = color.RGBA{255, 255, 255, 255}
 	pixWall      = color.RGBA{0, 0, 102, 255}
 	pixStart     = color.RGBA{204, 5, 0, 255}
@@ -18,7 +16,8 @@ var (
 	pixFinish    = color.RGBA{153, 0, 153, 255}
 )
 
-type gifGraph struct {
+// GifGraph ...
+type GifGraph struct {
 	width  int
 	height int
 	result *gif.GIF
@@ -33,8 +32,8 @@ var palette = []color.Color{
 }
 
 // NewGifGraph create new gif for graph visualisation
-func NewGifGraph(w, h int) *gifGraph {
-	gg := &gifGraph{
+func NewGifGraph(w, h int) *GifGraph {
+	gg := &GifGraph{
 		height: h,
 		width:  w,
 	}
@@ -47,20 +46,23 @@ func NewGifGraph(w, h int) *gifGraph {
 	return gg
 }
 
-func (gg *gifGraph) SetWall(x, y int) {
+// SetWall ...
+func (gg *GifGraph) SetWall(x, y int) {
 	gg.result.Image[0].Set(x, y, pixWall)
 }
 
-func (gg *gifGraph) SetStart(x, y int) {
+// SetStart ...
+func (gg *GifGraph) SetStart(x, y int) {
 	gg.result.Image[0].Set(x, y, pixStart)
 }
 
-func (gg *gifGraph) SetFinish(x, y int) {
+// SetFinish ...
+func (gg *GifGraph) SetFinish(x, y int) {
 	gg.result.Image[0].Set(x, y, pixFinish)
 }
 
 // Visit set point as visited
-func (gg *gifGraph) Visit(x, y int) {
+func (gg *GifGraph) Visit(x, y int) {
 	//create new image from previous one
 	f := *gg.result.Image[len(gg.result.Image)-1]
 	pix := make([]uint8, 0, len(f.Pix))
@@ -70,12 +72,13 @@ func (gg *gifGraph) Visit(x, y int) {
 	//set new visited node
 	f.Set(x, y, pixWalk)
 
-	//append new image to gif, and delay
+	//append new image frame, and delay to gif
 	gg.result.Delay = append(gg.result.Delay, defaultDelay)
 	gg.result.Image = append(gg.result.Image, &f)
 }
 
-func (gg *gifGraph) Save() {
+// Save ...
+func (gg *GifGraph) Save(filename string) {
 	//debug: save each frame
 	// for idx, v := range im.result.Image {
 	// 	f, _ := os.OpenFile(fmt.Sprintf("out/%d.gif", idx), os.O_WRONLY|os.O_CREATE, 0600)

@@ -39,7 +39,7 @@ type SquareGrid struct {
 	start   Node               //start node
 	target  Node               //target node
 
-	gif *gifGraph
+	gif *GifGraph
 }
 
 // InBound is it node locatated in the grid
@@ -168,7 +168,7 @@ func (g *SquareGrid) String() string {
 
 // SaveAnimation of curent grid state
 func (g *SquareGrid) SaveAnimation() {
-	g.gif.Save()
+	g.gif.Save("out/out.gif")
 }
 
 // Visit set node of grid as visited (only for)

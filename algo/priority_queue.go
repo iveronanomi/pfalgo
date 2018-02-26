@@ -54,7 +54,7 @@ func NewPriorityQueue() *PriorityQueue {
 // Add node item to queue
 func (pq *PriorityQueue) Add(node INode, priority int) {
 	item := &Item{
-		value:    node.(INode),
+		value:    node,
 		priority: priority,
 	}
 	heap.Push(pq, item)

@@ -1,28 +1,29 @@
 package algo
 
 // BreadthFirstSearch ...
-func BreadthFirstSearch(g *SquareGrid, start, target INode) map[INode]INode {
+func BreadthFirstSearch(g *SquareGrid, from, to INode) (path map[INode]INode) {
 	queue := NewQueue()
+	path = map[INode]INode{from: nil}
 
-	queue.Put(start)
-	cameFrom := map[INode]INode{
-		start: nil,
-	}
-	for !queue.Empty() {
+	queue.Add(from)
+
+	for queue.Len() > 0 {
 		current := queue.Get()
-		if current.Equal(target) {
+		if current.Equal(to) {
 			break
 		}
 
-		if !current.Equal(start) {
-			g.Visit(current) //debug: mark graph node as visited
+		// grid drawing
+		if !current.Equal(from) {
+			g.Visit(current)
 		}
+
 		for _, next := range g.Neighbours(current) {
-			if _, ok := cameFrom[next]; !ok {
-				cameFrom[next] = current
-				queue.Put(next)
+			if _, ok := path[next]; !ok {
+				path[next] = current
+				queue.Add(next)
 			}
 		}
 	}
-	return cameFrom
+	return path
 }

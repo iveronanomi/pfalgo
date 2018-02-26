@@ -1,7 +1,7 @@
 package algo
 
-// AStar search
-func AStar(g *SquareGrid, start, target INode) (path map[INode]INode, cost map[INode]uint32) {
+// AStarSearch search
+func AStarSearch(g *SquareGrid, start, target INode) (path map[INode]INode, cost map[INode]uint32) {
 	queue := NewPriorityQueue()
 	queue.Add(start, 0)
 	path = map[INode]INode{start: nil}

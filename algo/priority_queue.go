@@ -44,7 +44,7 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return item
 }
 
-// NewPriorityQueue create new priorirt queue
+// NewPriorityQueue create new priority queue
 func NewPriorityQueue() *PriorityQueue {
 	q := &PriorityQueue{}
 	heap.Init(q)

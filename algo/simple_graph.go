@@ -1,11 +1,11 @@
 package algo
 
-// SimpleGraph ...
-type SimpleGraph struct {
+// Graph ...
+type Graph struct {
 	Nodes map[string][]string
 }
 
-// Neiborhood ...
-func (g *SimpleGraph) Neiborhood(n string) []string {
+// Neighborhood ...
+func (g *Graph) Neighborhood(n string) []string {
 	return g.Nodes[n]
 }

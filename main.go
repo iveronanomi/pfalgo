@@ -7,35 +7,47 @@ import (
 )
 
 func main() {
-
 	sg, start, end := getGrid()
-	// algo.BreadthFirstSearch(sg, start, end)
-
-	algo.GreadyBreadthFirstSearch(sg, start, end)
-
-	// algo.Dijkstra(sg, start, end)
-
-	// rp := algo.ReconstructPath(cp, start, end, true)
-	// fmt.Println(cp)
-	// fmt.Println(rp)
-
-	fmt.Println(sg.String())
-	sg.SaveAnimation()
+	//cf := algo.BreadthFirstSearch(sg, start, end)
+	cf := algo.GreedyBreadthFirstSearch(sg, start, end)
+	//cf, _ := algo.Dijkstra(sg, start, end)
+	//cf, _ := algo.AStarSearch(sg, start, end)
+	rp := algo.ReconstructPath(cf, start, end, false)
+	drawReconstructedPath(rp)
 }
 
 func getGrid() (*algo.SquareGrid, algo.Node, algo.Node) {
 	//Create Grid
-	sg := algo.NewSquareGrid(30, 15, algo.LinearWalk)
+	w, h := 30, 15
 
-	start := algo.NewNode(24, 12, 1)
-	end := algo.NewNode(24, 1, 1)
+	sg := algo.NewSquareGrid(
+		uint32(w),
+		uint32(h),
+		algo.LinearWalk,
+		algo.NewGifGraph(w, h, "out/out.gif"),
+	)
+
+	start := algo.Node{24, 12}
+	end := algo.Node{0, 10}
 	//Add walls to grid
-	sg.AddWall(algo.NewNode(3, 3, 1), 9, 2)
-	sg.AddWall(algo.NewNode(13, 4, 1), 11, 2)
-	sg.AddWall(algo.NewNode(21, 0, 1), 7, 2)
-	sg.AddWall(algo.NewNode(21, 5, 1), 2, 5)
+	sg.AddWall(algo.Node{3, 3}, 9, 2)
+	sg.AddWall(algo.Node{13, 4}, 11, 2)
+	sg.AddWall(algo.Node{21, 0}, 7, 2)
+	sg.AddWall(algo.Node{21, 5}, 2, 5)
 
 	sg.Start(start) //only for a draw
 	sg.Target(end)  //only for a draw
 	return sg, start, end
+}
+
+func drawReconstructedPath(rp []algo.INode) {
+	sg, start, end := getGrid()
+	for _, v := range rp {
+		if v.Equal(start) || v.Equal(end) {
+			continue
+		}
+		sg.Visit(v)
+	}
+	fmt.Println(sg.String())
+	sg.SaveAnimation()
 }

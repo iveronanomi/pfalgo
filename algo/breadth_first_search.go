@@ -1,7 +1,7 @@
 package algo
 
 // BreadthFirstSearch ...
-func BreadthFirstSearch(g *SquareGrid, from, to INode) (path map[INode]INode) {
+func BreadthFirstSearch(g *SquareGridGraph, from, to INode) (path map[INode]INode) {
 	queue := NewQueue()
 	path = map[INode]INode{from: nil}
 
@@ -13,7 +13,7 @@ func BreadthFirstSearch(g *SquareGrid, from, to INode) (path map[INode]INode) {
 			break
 		}
 
-		// grid drawing
+		//mark graph node as visited
 		if !current.Equal(from) {
 			g.Visit(current)
 		}

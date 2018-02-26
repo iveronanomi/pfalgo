@@ -1,11 +1,5 @@
 package algo
 
-// INode interface
-type INode interface {
-	Position() (uint32, uint32)
-	Equal(node INode) bool
-}
-
 // Node structure
 type Node struct {
 	X     uint32

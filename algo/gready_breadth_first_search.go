@@ -1,7 +1,7 @@
 package algo
 
 // GreedyBreadthFirstSearch ...
-func GreedyBreadthFirstSearch(g *SquareGrid, from, to INode) map[INode]INode {
+func GreedyBreadthFirstSearch(g *SquareGridGraph, from, to INode) map[INode]INode {
 	queue := NewPriorityQueue()
 	queue.Add(from, 0)
 	path := map[INode]INode{from: nil}
@@ -13,8 +13,9 @@ func GreedyBreadthFirstSearch(g *SquareGrid, from, to INode) map[INode]INode {
 			break
 		}
 
+		//mark graph node as visited
 		if !current.Equal(from) {
-			g.Visit(current) //debug: mark graph node as visited
+			g.Visit(current)
 		}
 
 		for _, next := range g.Neighbours(current) {

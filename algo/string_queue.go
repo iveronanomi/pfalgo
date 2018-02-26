@@ -1,6 +1,6 @@
 package algo
 
-// StringQueue stucture
+// StringQueue structure
 type StringQueue struct {
 	nodes []string
 }

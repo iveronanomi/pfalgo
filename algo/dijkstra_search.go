@@ -1,7 +1,7 @@
 package algo
 
-// Dijkstra search
-func Dijkstra(g *SquareGrid, start, target INode) (path map[INode]INode, cost map[INode]uint32) {
+// DijkstraSearch ...
+func DijkstraSearch(g *SquareGridGraph, start, target INode) (path map[INode]INode, cost map[INode]uint32) {
 	q := NewPriorityQueue()
 	q.Add(start, 0)
 	path = map[INode]INode{start: nil}
@@ -13,18 +13,16 @@ func Dijkstra(g *SquareGrid, start, target INode) (path map[INode]INode, cost ma
 			break
 		}
 
-		// draw option
+		//mark graph node as visited
 		if !current.Equal(start) {
 			g.Visit(current)
 		}
 
 		for _, next := range g.Neighbours(current) {
 			newCost := cost[current] + g.Cost(current, next)
-			// log.Printf("newCost: %d", newCost)
 			if v, ok := cost[next]; !ok || newCost < v {
 				cost[next] = newCost
-				// priority := newCost
-				q.Add(next, int(newCost)) //set priorirt for node
+				q.Add(next, int(newCost))
 				path[next] = current
 			}
 		}

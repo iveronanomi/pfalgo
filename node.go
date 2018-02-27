@@ -1,13 +1,13 @@
-package algo
+package pfalgo
 
 // Node structure
 type Node struct {
-	X     uint32
-	Y     uint32
+	X int
+	Y int
 }
 
 // Position get position of node (x, y)
-func (n Node) Position() (uint32, uint32) {
+func (n Node) Position() (int, int) {
 	return n.X, n.Y
 }
 
@@ -16,4 +16,3 @@ func (n Node) Equal(node INode) bool {
 	x, y := node.Position()
 	return n.X == x && n.Y == y
 }
-

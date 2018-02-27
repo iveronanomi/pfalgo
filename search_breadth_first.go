@@ -1,7 +1,7 @@
-package algo
+package pfalgo
 
 // BreadthFirstSearch ...
-func BreadthFirstSearch(g *SquareGridGraph, from, to INode) (path map[INode]INode) {
+func BreadthFirstSearch(g *GridGraph, from, to INode) (path map[INode]INode) {
 	queue := NewQueue()
 	path = map[INode]INode{from: nil}
 
@@ -15,7 +15,7 @@ func BreadthFirstSearch(g *SquareGridGraph, from, to INode) (path map[INode]INod
 
 		//mark graph node as visited
 		if !current.Equal(from) {
-			g.Visit(current)
+			g.Visit(current.Position())
 		}
 
 		for _, next := range g.Neighbours(current) {

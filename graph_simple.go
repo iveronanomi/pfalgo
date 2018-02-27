@@ -1,4 +1,4 @@
-package algo
+package pfalgo
 
 // Graph ...
 type Graph struct {

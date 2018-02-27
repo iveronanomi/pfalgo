@@ -1,5 +1,4 @@
-package algo
-
+package pfalgo
 
 const (
 	charObstruction = " ◼"
@@ -9,25 +8,24 @@ const (
 	charVisited     = " ◆"
 )
 
-// String create preview of grid
-func String(g *SquareGridGraph) string {
+// String create string grid visualisation
+func String(g *GridGraph) string {
 	out := ""
 	for y := 0; y < int(g.height); y++ {
 		for x := 0; x < int(g.width); x++ {
-			node := Node{uint32(x), uint32(y)}
-			if g.target.Equal(node) {
+			if g.target[0] == x && g.target[1] == y {
 				out += charTarget
 				continue
 			}
-			if g.start.Equal(node) {
+			if g.start[0] == x && g.start[1] == y {
 				out += charStart
 				continue
 			}
-			if !g.Passable(node) {
+			if !g.Passable(x, y) {
 				out += charObstruction
 				continue
 			}
-			if _, ok := g.visited[node]; ok {
+			if _, ok := g.visited[x][y]; ok {
 				out += charVisited
 				continue
 			}

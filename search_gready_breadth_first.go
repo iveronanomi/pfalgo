@@ -1,7 +1,7 @@
-package algo
+package pfalgo
 
 // GreedyBreadthFirstSearch ...
-func GreedyBreadthFirstSearch(g *SquareGridGraph, from, to INode) map[INode]INode {
+func GreedyBreadthFirstSearch(g *GridGraph, from, to INode) map[INode]INode {
 	queue := NewPriorityQueue()
 	queue.Add(from, 0)
 	path := map[INode]INode{from: nil}
@@ -15,7 +15,7 @@ func GreedyBreadthFirstSearch(g *SquareGridGraph, from, to INode) map[INode]INod
 
 		//mark graph node as visited
 		if !current.Equal(from) {
-			g.Visit(current)
+			g.Visit(current.Position())
 		}
 
 		for _, next := range g.Neighbours(current) {

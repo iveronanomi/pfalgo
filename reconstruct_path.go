@@ -1,4 +1,4 @@
-package algo
+package pfalgo
 
 // ReconstructPath ...
 func ReconstructPath(cameFrom map[INode]INode, from, to INode, reversed bool) (path []INode) {

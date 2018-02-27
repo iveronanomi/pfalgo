@@ -1,10 +1,11 @@
-package algo
+package pfalgo
 
 import (
 	"image"
 	"image/color"
 	"image/gif"
 	"os"
+	"fmt"
 )
 
 var (
@@ -18,9 +19,9 @@ var (
 
 // GifGraph ...
 type GifGraph struct {
-	width  int
-	height int
-	result *gif.GIF
+	width    int
+	height   int
+	result   *gif.GIF
 	filename string
 }
 
@@ -35,8 +36,8 @@ var palette = []color.Color{
 // NewGifGraph create new draw for graph visualisation
 func NewGifGraph(w, h int, filename string) *GifGraph {
 	gg := &GifGraph{
-		height: h,
-		width:  w,
+		height:   h,
+		width:    w,
 		filename: filename,
 	}
 	gg.result = &gif.GIF{
@@ -48,13 +49,23 @@ func NewGifGraph(w, h int, filename string) *GifGraph {
 	return gg
 }
 
-// SetWall ...
-func (gg *GifGraph) Point(x, y int, pointType color.RGBA) {
-	gg.result.Image[0].Set(x, y, pointType)
+// Wall ...
+func (gg *GifGraph) Wall(x, y int) {
+	gg.result.Image[0].Set(x, y, PointWall)
 }
 
-// Visit set point as visited
-func (gg *GifGraph) Visit(x, y int) {
+// Start ...
+func (gg *GifGraph) Start(x, y int) {
+	gg.result.Image[0].Set(x, y, PointStart)
+}
+
+// Finish ...
+func (gg *GifGraph) Finish(x, y int) {
+	gg.result.Image[0].Set(x, y, PointFinish)
+}
+
+// Walk set point as visited and add new frame
+func (gg *GifGraph) Walk(x, y int) {
 	//create new image from previous one
 	f := *gg.result.Image[len(gg.result.Image)-1]
 	pix := make([]uint8, 0, len(f.Pix))
@@ -70,21 +81,15 @@ func (gg *GifGraph) Visit(x, y int) {
 }
 
 // Save ...
-func (gg *GifGraph) Save() {
-	//debug: save each frame
-	// for idx, v := range im.result.Image {
-	// 	f, _ := os.OpenFile(fmt.Sprintf("out/%d.draw", idx), os.O_WRONLY|os.O_CREATE, 0600)
-	// 	defer f.Close()
-	// 	err := draw.EncodeAll(f, &draw.GIF{
-	// 		Delay: []int{0},
-	// 		Image: []*image.Paletted{
-	// 			v,
-	// 		},
-	// 	})
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// }
+func (gg *GifGraph) Save(saveEachFrame bool) {
+	if saveEachFrame {
+		gg.saveEachFrame()
+		return
+	}
+	gg.save()
+}
+
+func (gg *GifGraph) save() {
 	f, _ := os.OpenFile(gg.filename, os.O_WRONLY|os.O_CREATE, 0600)
 	defer f.Close()
 
@@ -92,5 +97,21 @@ func (gg *GifGraph) Save() {
 
 	if err != nil {
 		panic(err)
+	}
+}
+
+func (gg *GifGraph) saveEachFrame() {
+	for idx, v := range gg.result.Image {
+		f, _ := os.OpenFile(fmt.Sprintf("out/%d.draw", idx), os.O_WRONLY|os.O_CREATE, 0600)
+		defer f.Close()
+		err := gif.EncodeAll(f, &gif.GIF{
+			Delay: []int{0},
+			Image: []*image.Paletted{
+				v,
+			},
+		})
+		if err != nil {
+			panic(err)
+		}
 	}
 }

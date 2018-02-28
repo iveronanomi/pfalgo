@@ -1,23 +1,20 @@
 package pfalgo
 
 // DijkstraSearch ...
-func DijkstraSearch(g *GridGraph, start, target INode) (path map[INode]INode, cost map[INode]uint32) {
+func DijkstraSearch(g *GridGraph, from, to INode, callback func(graph *GridGraph, from, to INode)) (path map[INode]INode, cost map[INode]uint32) {
 	q := NewPriorityQueue()
-	q.Add(start, 0)
-	path = map[INode]INode{start: nil}
-	cost = map[INode]uint32{start: 0}
+	q.Add(from, 0)
+	path = map[INode]INode{from: nil}
+	cost = map[INode]uint32{from: 0}
 
 	for q.Len() > 0 {
 		current := q.Get()
-		if current.Equal(target) {
+		if current.Equal(to) {
 			break
 		}
-
-		//mark graph node as visited
-		if !current.Equal(start) {
-			g.Visit(current.Position())
+		if callback != nil {
+			callback(g, from, to)
 		}
-
 		for _, next := range g.Neighbours(current) {
 			newCost := cost[current] + g.Cost(current, next)
 			if v, ok := cost[next]; !ok || newCost < v {

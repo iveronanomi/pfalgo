@@ -23,17 +23,17 @@ type GridGraph struct {
 	start        [2]int               //start node
 	target       [2]int               //target node
 
-	draw IDraw
+	Drawer IDrawer
 }
 
 // NewSquareGrid new instance of grid
-func NewSquareGrid(width, height uint32, walkType WalkBehaviour, draw IDraw) *GridGraph {
+func NewSquareGrid(width, height uint32, walkType WalkBehaviour, drawer IDrawer) *GridGraph {
 	return &GridGraph{
 		width:         width,
 		height:        height,
 		obstructions:  map[int]map[int]struct{}{},
 		walkBehaviour: walkType,
-		draw:          draw,
+		Drawer:        drawer,
 	}
 }
 
@@ -103,8 +103,8 @@ func (g *GridGraph) AddWall(xPos, yPos, height, width int) {
 				g.obstructions[x] = map[int]struct{}{}
 			}
 			g.obstructions[x][y] = struct{}{}
-			if g.draw != nil {
-				g.draw.Wall(x, y)
+			if g.Drawer != nil {
+				g.Drawer.Wall(x, y)
 			}
 		}
 	}
@@ -120,28 +120,28 @@ func (g *GridGraph) Visit(x, y int) {
 	}
 	g.visited[x][y] = struct{}{}
 
-	// for image draw
-	if g.draw != nil {
-		g.draw.Walk(x, y)
+	// for image Drawer
+	if g.Drawer != nil {
+		g.Drawer.Walk(x, y)
 	}
 }
 
-// Start set start node (only for draw)
+// Start set start node (only for Drawer)
 func (g *GridGraph) Start(x, y int) {
 	g.start = [2]int{x,y}
 
-	//for image draw
-	if g.draw != nil {
-		g.draw.Start(x, y)
+	//for image Drawer
+	if g.Drawer != nil {
+		g.Drawer.Start(x, y)
 	}
 }
 
-// Target set start node (only for draw)
+// Target set start node (only for Drawer)
 func (g *GridGraph) Target(x, y int) {
 	g.target = [2]int{x,y}
 
-	//for image draw
-	if g.draw != nil {
-		g.draw.Finish(x, y)
+	//for image Drawer
+	if g.Drawer != nil {
+		g.Drawer.Finish(x, y)
 	}
 }

@@ -81,15 +81,7 @@ func (gg *GifGraph) Walk(x, y int) {
 }
 
 // Save ...
-func (gg *GifGraph) Save(saveEachFrame bool) {
-	if saveEachFrame {
-		gg.saveEachFrame()
-		return
-	}
-	gg.save()
-}
-
-func (gg *GifGraph) save() {
+func (gg *GifGraph) Save() {
 	f, _ := os.OpenFile(gg.filename, os.O_WRONLY|os.O_CREATE, 0600)
 	defer f.Close()
 

@@ -2,15 +2,15 @@ package pfalgo
 
 // INode interface
 type INode interface {
-	Position() (int, int)
-	Equal(node INode) bool
+	Position() (int, int) // get position of node
+	Equal(node INode) bool // is equal nodes (check positions)
 }
 
 // IDraw interface
-type IDraw interface {
-	Walk(x int, y int)
-	Wall(x int, y int)
-	Start(x int, y int)
-	Finish(x int, y int)
-	Save(bool)
+type IDrawer interface {
+	Walk(x int, y int) //mark position as passed and add new frame
+	Wall(x int, y int) //mark position as wall element
+	Start(x int, y int) //mark position as start position
+	Finish(x int, y int) //mark position as target position
+	Save() //save to file
 }

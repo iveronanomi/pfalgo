@@ -60,11 +60,11 @@ func (gg *GifGraph) Start(x, y int) {
 }
 
 // Finish ...
-func (gg *GifGraph) Finish(x, y int) {
+func (gg *GifGraph) Target(x, y int) {
 	gg.result.Image[0].Set(x, y, PointFinish)
 }
 
-// Walk set point as visited and add new frame
+// Walk set point as Visited and add new frame
 func (gg *GifGraph) Walk(x, y int) {
 	//create new image from previous one
 	f := *gg.result.Image[len(gg.result.Image)-1]
@@ -72,7 +72,7 @@ func (gg *GifGraph) Walk(x, y int) {
 	pix = append(pix, f.Pix...)
 	f.Pix = pix
 
-	//set new visited node
+	//set new Visited node
 	f.Set(x, y, PointWalk)
 
 	//append new image frame, and delay to draw

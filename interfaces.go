@@ -11,6 +11,6 @@ type IDrawer interface {
 	Walk(x int, y int) //mark position as passed and add new frame
 	Wall(x int, y int) //mark position as wall element
 	Start(x int, y int) //mark position as start position
-	Finish(x int, y int) //mark position as target position
+	Target(x int, y int) //mark position as target position
 	Save() //save to file
 }

@@ -18,10 +18,10 @@ type GridGraph struct {
 	height        uint32        //height of grid
 	walkBehaviour WalkBehaviour //is it possible to walk to node: diagonal/linear or both
 
-	obstructions map[int]map[int]struct{}  //list of obstructions in the grid, not passable
-	visited      map[int]map[int]struct{} //list of visited nodes
-	start        [2]int               //start node
-	target       [2]int               //target node
+	Obstructions map[int]map[int]struct{} //list of Obstructions in the grid, not passable
+	Visited      map[int]map[int]struct{} //list of Visited nodes
+	start        [2]int                   //start node
+	target       [2]int                   //target node
 
 	Drawer IDrawer
 }
@@ -31,7 +31,7 @@ func NewSquareGrid(width, height uint32, walkType WalkBehaviour, drawer IDrawer)
 	return &GridGraph{
 		width:         width,
 		height:        height,
-		obstructions:  map[int]map[int]struct{}{},
+		Obstructions:  map[int]map[int]struct{}{},
 		walkBehaviour: walkType,
 		Drawer:        drawer,
 	}
@@ -44,7 +44,7 @@ func (g *GridGraph) InBound(x, y int) bool {
 
 // Passable is it passable node
 func (g *GridGraph) Passable(x, y int) bool {
-	_, ok := g.obstructions[x][y]
+	_, ok := g.Obstructions[x][y]
 	return !ok
 }
 
@@ -99,10 +99,10 @@ func (g *GridGraph) AddWall(xPos, yPos, height, width int) {
 			if !g.InBound(x, y) {
 				continue
 			}
-			if _, ok := g.obstructions[x]; !ok {
-				g.obstructions[x] = map[int]struct{}{}
+			if _, ok := g.Obstructions[x]; !ok {
+				g.Obstructions[x] = map[int]struct{}{}
 			}
-			g.obstructions[x][y] = struct{}{}
+			g.Obstructions[x][y] = struct{}{}
 			if g.Drawer != nil {
 				g.Drawer.Wall(x, y)
 			}
@@ -110,15 +110,15 @@ func (g *GridGraph) AddWall(xPos, yPos, height, width int) {
 	}
 }
 
-// Visit set node of grid as visited
+// Visit set node of grid as Visited
 func (g *GridGraph) Visit(x, y int) {
-	if g.visited == nil {
-		g.visited = make(map[int]map[int]struct{})
+	if g.Visited == nil {
+		g.Visited = make(map[int]map[int]struct{})
 	}
-	if _, ok := g.visited[x]; !ok {
-		g.visited[x] = map[int]struct{}{}
+	if _, ok := g.Visited[x]; !ok {
+		g.Visited[x] = map[int]struct{}{}
 	}
-	g.visited[x][y] = struct{}{}
+	g.Visited[x][y] = struct{}{}
 
 	// for image Drawer
 	if g.Drawer != nil {
@@ -142,6 +142,6 @@ func (g *GridGraph) Target(x, y int) {
 
 	//for image Drawer
 	if g.Drawer != nil {
-		g.Drawer.Finish(x, y)
+		g.Drawer.Target(x, y)
 	}
 }

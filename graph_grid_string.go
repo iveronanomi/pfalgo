@@ -25,7 +25,7 @@ func String(g *GridGraph) string {
 				out += charObstruction
 				continue
 			}
-			if _, ok := g.visited[x][y]; ok {
+			if _, ok := g.Visited[x][y]; ok {
 				out += charVisited
 				continue
 			}

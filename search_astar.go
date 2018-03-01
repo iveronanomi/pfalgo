@@ -1,11 +1,11 @@
 package pfalgo
 
 // AStarSearch ...
-func AStarSearch(g *GridGraph, from, to INode, callback func(graph *GridGraph, from, to INode)) (path map[INode]INode, cost map[INode]uint32) {
+func AStarSearch(g *GridGraph, from, to INode, callback func(graph *GridGraph, from, to INode)) (path map[INode]INode, cost map[INode]int) {
 	queue := NewPriorityQueue()
 	queue.Add(from, 0)
 	path = map[INode]INode{from: nil}
-	cost = map[INode]uint32{from: 0}
+	cost = map[INode]int{from: 0}
 
 	for queue.Len() > 0 {
 		current := queue.Get()

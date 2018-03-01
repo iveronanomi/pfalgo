@@ -14,12 +14,12 @@ const (
 
 // GridGraph space
 type GridGraph struct {
-	width         uint32        //width of grid
-	height        uint32        //height of grid
+	width         int           //width of grid
+	height        int           //height of grid
 	walkBehaviour WalkBehaviour //is it possible to walk to node: diagonal/linear or both
 
-	Obstructions map[int]map[int]struct{} //list of Obstructions in the grid, not passable
-	Visited      map[int]map[int]struct{} //list of Visited nodes
+	obstructions map[int]map[int]struct{} //list of Obstructions in the grid, not passable
+	visited      map[int]map[int]struct{} //list of Visited nodes
 	start        [2]int                   //start node
 	target       [2]int                   //target node
 
@@ -27,11 +27,12 @@ type GridGraph struct {
 }
 
 // NewSquareGrid new instance of grid
-func NewSquareGrid(width, height uint32, walkType WalkBehaviour, drawer IDrawer) *GridGraph {
+func NewSquareGrid(width, height int, walkType WalkBehaviour, drawer IDrawer) *GridGraph {
 	return &GridGraph{
 		width:         width,
 		height:        height,
-		Obstructions:  map[int]map[int]struct{}{},
+		obstructions:  make(map[int]map[int]struct{}),
+		visited:       make(map[int]map[int]struct{}),
 		walkBehaviour: walkType,
 		Drawer:        drawer,
 	}
@@ -44,7 +45,7 @@ func (g *GridGraph) InBound(x, y int) bool {
 
 // Passable is it passable node
 func (g *GridGraph) Passable(x, y int) bool {
-	_, ok := g.Obstructions[x][y]
+	_, ok := g.obstructions[x][y]
 	return !ok
 }
 
@@ -88,7 +89,7 @@ func (g *GridGraph) Neighbours(node INode) []Node {
 }
 
 // Cost of movements from `node` to `node`
-func (g *GridGraph) Cost(from, to INode) uint32 {
+func (g *GridGraph) Cost(from, to INode) int {
 	return 1
 }
 
@@ -99,10 +100,10 @@ func (g *GridGraph) AddWall(xPos, yPos, height, width int) {
 			if !g.InBound(x, y) {
 				continue
 			}
-			if _, ok := g.Obstructions[x]; !ok {
-				g.Obstructions[x] = map[int]struct{}{}
+			if _, ok := g.obstructions[x]; !ok {
+				g.obstructions[x] = map[int]struct{}{}
 			}
-			g.Obstructions[x][y] = struct{}{}
+			g.obstructions[x][y] = struct{}{}
 			if g.Drawer != nil {
 				g.Drawer.Wall(x, y)
 			}
@@ -112,13 +113,10 @@ func (g *GridGraph) AddWall(xPos, yPos, height, width int) {
 
 // Visit set node of grid as Visited
 func (g *GridGraph) Visit(x, y int) {
-	if g.Visited == nil {
-		g.Visited = make(map[int]map[int]struct{})
+	if _, ok := g.visited[x]; !ok {
+		g.visited[x] = map[int]struct{}{}
 	}
-	if _, ok := g.Visited[x]; !ok {
-		g.Visited[x] = map[int]struct{}{}
-	}
-	g.Visited[x][y] = struct{}{}
+	g.visited[x][y] = struct{}{}
 
 	// for image Drawer
 	if g.Drawer != nil {
@@ -126,9 +124,9 @@ func (g *GridGraph) Visit(x, y int) {
 	}
 }
 
-// Start set start node (only for Drawer)
-func (g *GridGraph) Start(x, y int) {
-	g.start = [2]int{x,y}
+// SetStart set start node (only for Drawer)
+func (g *GridGraph) SetStart(x, y int) {
+	g.start = [2]int{x, y}
 
 	//for image Drawer
 	if g.Drawer != nil {
@@ -136,12 +134,38 @@ func (g *GridGraph) Start(x, y int) {
 	}
 }
 
-// Target set start node (only for Drawer)
-func (g *GridGraph) Target(x, y int) {
-	g.target = [2]int{x,y}
+// SetTarget set start node (only for Drawer)
+func (g *GridGraph) SetTarget(x, y int) {
+	g.target = [2]int{x, y}
 
 	//for image Drawer
 	if g.Drawer != nil {
 		g.Drawer.Target(x, y)
 	}
+}
+
+// Start point
+func (g *GridGraph) Start() (int, int) {
+	return g.start[0], g.start[1]
+}
+
+// Target point
+func (g *GridGraph) Target() (int, int) {
+	return g.target[0], g.target[1]
+}
+
+// Visited point
+func (g *GridGraph) Visited(x, y int) bool {
+	_, ok := g.visited[x][y]
+	return ok
+}
+
+//Height of graph
+func (g *GridGraph) Height() int {
+	return g.height
+}
+
+//Width of graph
+func (g *GridGraph) Width() int {
+	return g.width
 }

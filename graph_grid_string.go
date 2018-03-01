@@ -1,35 +1,57 @@
 package pfalgo
 
+// GridGraphSymbols grid graph symbol type
+type GridGraphSymbols int8
+
 const (
-	charObstruction = " ◼"
-	charGrid        = " ◻"
-	charStart       = " Ⓐ"
-	charTarget      = " Ⓩ"
-	charVisited     = " ◆"
+	//SymbolObstruction obstruction node symbol
+	SymbolObstruction GridGraphSymbols = iota << 1
+	//SymbolGrid empty grid node symbol
+	SymbolGrid
+	//SymbolStart start node symbol
+	SymbolStart
+	//SymbolTarget target node symbol
+	SymbolTarget
+	//SymbolVisited symbol of visited node
+	SymbolVisited
 )
 
+var gridStringerSymbols = map[GridGraphSymbols]string{
+	SymbolObstruction: " ◼",
+	SymbolGrid:        " ◻",
+	SymbolStart:       " Ⓐ",
+	SymbolTarget:      " Ⓩ",
+	SymbolVisited:     " ◆",
+}
+
 // String create string grid visualisation
-func String(g *GridGraph) string {
-	out := ""
-	for y := 0; y < int(g.height); y++ {
-		for x := 0; x < int(g.width); x++ {
-			if g.target[0] == x && g.target[1] == y {
-				out += charTarget
+func String(g IGridGraph, symbols map[GridGraphSymbols]string) string {
+	if symbols == nil {
+		symbols = gridStringerSymbols
+	}
+	var out string
+	startX, startY := g.Start()
+	targetX, targetY := g.Target()
+
+	for y := 0; y < g.Height(); y++ {
+		for x := 0; x < g.Width(); x++ {
+			if targetX == x && targetY == y {
+				out += symbols[SymbolTarget]
 				continue
 			}
-			if g.start[0] == x && g.start[1] == y {
-				out += charStart
+			if startX == x && startY == y {
+				out += symbols[SymbolStart]
 				continue
 			}
 			if !g.Passable(x, y) {
-				out += charObstruction
+				out += symbols[SymbolObstruction]
 				continue
 			}
-			if _, ok := g.Visited[x][y]; ok {
-				out += charVisited
+			if g.Visited(x, y) {
+				out += symbols[SymbolVisited]
 				continue
 			}
-			out += charGrid
+			out += symbols[SymbolGrid]
 		}
 		out += "\n\r"
 	}

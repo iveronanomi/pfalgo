@@ -41,7 +41,7 @@ func (s *SquareGridSuite) TestSquareGrid_Neighbours_TopLeftCorrect(c *C) {
 	c.Assert(neighbours, HasLen, 2)
 }
 
-func (s *SquareGridSuite) TestSquareGrid_Neighbours_FourCorrect(c *C) {
+func (s *SquareGridSuite) TestSquareGrid_Neighbours_LinearWalk(c *C) {
 	sg := NewSquareGrid(5, 5, LinearWalk, nil)
 
 	neighbours := sg.Neighbours(Node{1, 1})
@@ -56,4 +56,20 @@ func (s *SquareGridSuite) TestSquareGrid_Neighbours_WithWallCorrect(c *C) {
 	neighbours := sg.Neighbours(Node{2, 2})
 
 	c.Assert(neighbours, HasLen, 3)
+}
+
+func (s *SquareGridSuite) TestSquareGrid_Neighbours_DiagonalWalk(c *C) {
+	sg := NewSquareGrid(5, 5, DiagonalWalk, nil)
+
+	neighbours := sg.Neighbours(Node{1, 1})
+
+	c.Assert(neighbours, HasLen, 4)
+}
+
+func (s *SquareGridSuite) TestSquareGrid_Neighbours_AllWalk(c *C) {
+	sg := NewSquareGrid(5, 5, AllWalk, nil)
+
+	neighbours := sg.Neighbours(Node{1, 1})
+
+	c.Assert(neighbours, HasLen, 8)
 }
